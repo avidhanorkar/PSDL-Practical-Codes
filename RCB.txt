@@ -1,0 +1,364 @@
+Addition of Arrays
+
+#include <pic18f4550.h> // Including the header file for PIC18F4550 microcontroller
+
+void main(void) // Main function
+{ 
+  int i, n=10, sum=0; // Declaring variables i, n (with value 10), and sum, and initializing sum to 0
+  TRISB=0; // Configuring PORTB as output
+  
+  int number[]={1,2,3,4,5,6,7,8,9,10}; // Declaring and initializing an array 'number' with 10 integers
+  
+  for(i=0; i<n; i++) // Loop through the array elements
+  { 
+    sum = sum + number[i]; // Adding each element of the array to 'sum'
+  } 
+   
+  PORTB = sum; // Assigning the value of 'sum' to PORTB
+  
+  return; // Returning from the main function
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Addition of Numbers
+
+# include <PIC18F4550.h>       // Include header file for PIC18F4550 microcontroller
+void main (void)                // Main function definition
+{ 
+unsigned int num1 , num2 ,sum ; // Declare variables num1, num2, and sum as unsigned integers
+TRISB =0 ;                      // Set all bits of PORTB as output
+//LATB =0 ;                     // Commented out: setting all bits of LATB as 0 (not used in this code)
+num1 = 0x04;                    // Assign hexadecimal value 0x04 (4 in decimal) to num1
+num2 = 0x05;                    // Assign hexadecimal value 0x05 (5 in decimal) to num2
+sum  = num1 + num2 ;            // Calculate sum of num1 and num2 and assign it to variable sum
+PORTB = sum ;                   // Assign value of sum to PORTB
+PORTC = num1 ;                  // Assign value of num1 to PORTC
+PORTD = num2 ;                  // Assign value of num2 to PORTD
+return ;                        // Return from main function
+} 
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Multiplication of Numbers
+
+# include <PIC18F4550.h>       // Include the header file for PIC18F4550 microcontroller.
+
+void main (void)                // Main function definition.
+{ 
+unsigned int num1 , num2 , mul; // Declaration of unsigned integers num1, num2, and mul.
+TRISB =0 ;                      // Set all pins of PORTB as output.
+//LATB =1 ;                     // Commented out line. It doesn't affect the program execution.
+
+num1 = 0x04;                    // Assign hexadecimal value 0x04 to variable num1.
+num2 = 0x05;                    // Assign hexadecimal value 0x05 to variable num2.
+
+mul  = num1 * num2 ;            // Multiply num1 and num2 and store the result in mul.
+PORTB = sum ;                   // Output the result of the multiplication on PORTB. (There is a typo here, 'sum' should be 'mul'.)
+
+PORTC = num1 ;                  // Output num1 on PORTC.
+PORTD = num2 ;                  // Output num2 on PORTD.
+
+return ;                        // Return from main function.
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+LED Blinking
+
+#include <PIC18f4550.h>           // Include the header file for PIC18f4550 microcontroller.
+
+void delay(unsigned int time)     // Function definition for delay with parameter 'time'.
+{ 
+    unsigned int i, j;             // Declaration of unsigned integers i and j.
+    for(i = 0; i < time; i++)      // Loop for 'time' iterations.
+        for(j = 0; j < 5000; j++); // Nested loop for delay.
+} 
+
+void main(void)                    // Main function definition.
+{ 
+    TRISB = 0x00;                  // Set all pins of PORTB as output.
+    LATB = 0xFF;                   // Set initial value of PORTB as 0xFF (all pins high).
+
+    while(1)                       // Infinite loop.
+    { 
+        LATB = ~LATB;              // Toggle the value of PORTB using bitwise complement.
+        delay(200);                // Call delay function with parameter 200.
+    } 
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+#include <PIC18F4550.h> // Include the header file for PIC18F4550 microcontroller
+
+int c=0; // Initialize variable c to count interrupts
+
+void __interrupt() tmr1_isr(){ // Interrupt service routine for Timer1
+    c++; // Increment the counter c
+    if(c==1000){ // Check if c has reached 1000
+        c=0; // Reset c to 0
+        LATAbits.LATA5=~LATAbits.LATA5; // Toggle the state of pin RA5
+    }
+    TMR1IF=0; // Clear the Timer1 interrupt flag
+    TMR1=53536; // Reload Timer1 with initial value for 1 ms delay
+}
+
+void main(void) {
+    T1CON = 0x80; // Configure Timer1 control register for desired settings
+    TRISAbits.TRISA5=0; // Configure pin RA5 as output
+    LATAbits.LATA5=0; // Set initial state of pin RA5 to low
+    TMR1IE=1; // Enable Timer1 interrupt
+    TMR1IF=0; // Clear Timer1 interrupt flag
+    GIE=1; // Enable global interrupts
+    PEIE=1; // Enable peripheral interrupts
+    TMR1=53536; // Load Timer1 with initial value for 1 ms delay
+    TMR1ON=1; // Turn on Timer1
+    while(1); // Infinite loop to keep the program running
+    return; // Return statement
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+LCD Interfacing
+
+#include <pic18f4550.h> // Include the header file for PIC18F4550 microcontroller
+
+#define LCD_EN LATAbits.LA1 // Define LCD enable pin
+#define LCD_RS LATAbits.LA0 // Define LCD register select pin
+#define LCDPORT LATB // Define LCD data port
+
+void lcd_delay(unsigned int time)
+{
+    unsigned int i, j;
+    for(i = 0; i < time; i++)
+    {
+        for(j = 0; j < 100; j++);
+    }
+}
+
+void SendInstruction(unsigned char command)
+{
+    LCD_RS = 0;         // Set RS low for instruction mode
+    LCDPORT = command;  // Send command to LCD data port
+    LCD_EN = 1;         // Set EN high
+    lcd_delay(10);      // Delay
+    LCD_EN = 0;         // Set EN low
+    lcd_delay(10);      // Delay
+}
+
+void SendData(unsigned char lcddata)
+{
+    LCD_RS = 1;         // Set RS high for data mode
+    LCDPORT = lcddata;  // Send data to LCD data port
+    LCD_EN = 1;         // Set EN high
+    lcd_delay(10);      // Delay
+    LCD_EN = 0;         // Set EN low
+    lcd_delay(10);      // Delay
+}
+
+void InitLCD(void)
+{
+    ADCON1 = 0x0F;      // Configure ADCON1 register
+    TRISB = 0x00;       // Set data port as output
+    TRISAbits.RA0 = 0;  // Set RS pin as output
+    TRISAbits.RA1 = 0;  // Set EN pin as output
+
+    SendInstruction(0x38); // Set LCD to 8-bit mode, 2-line display, 5x7 font
+    SendInstruction(0x06); // Set entry mode
+    SendInstruction(0x0C); // Turn on display, cursor off
+    SendInstruction(0x01); // Clear display
+    SendInstruction(0x80); // Set address to the beginning of the first line
+}
+
+unsigned char *String1 = "Microembedded";
+unsigned char *String2 = "PIC-18F Board";
+
+void main(void)
+{
+    ADCON1 = 0x0F;      // Configure ADCON1 register
+    TRISB = 0x00;       // Set data port as output
+    TRISAbits.RA0 = 0;  // Set RS pin as output
+    TRISAbits.RA1 = 0;  // Set EN pin as output
+
+    InitLCD();          // Initialize LCD
+
+    while(*String1)    // Display String1
+    {
+        SendData(*String1);
+        String1++;
+    }
+
+    SendInstruction(0xC0); // Move cursor to the beginning of the second line
+
+    while(*String2)    // Display String2
+    {
+        SendData(*String2);
+        String2++;
+    }
+
+    while(1); // Infinite loop
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Temperature 
+
+#include <pic18f4550.h>
+#include <stdio.h>
+
+#define LCD_EN LATAbits.LA1
+#define LCD_RS LATAbits.LA0
+#define LCDPORT LATB
+
+unsigned char str[16];
+
+void lcd_delay(unsigned int time)
+{
+    unsigned int i, j;
+
+    for(i = 0; i < time; i++)
+    {
+        for(j = 0; j < 100; j++);
+    }
+}
+
+void SendInstruction(unsigned char command)
+{
+    LCD_RS = 0;             // RS low: Instruction
+    LCDPORT = command;      // Send command to LCD data port
+    LCD_EN = 1;             // EN High
+    lcd_delay(10);
+    LCD_EN = 0;             // EN Low; command sampled at EN falling edge
+    lcd_delay(10);
+}
+
+void SendData(unsigned char lcddata)
+{
+    LCD_RS = 1;             // RS HIGH: DATA
+    LCDPORT = lcddata;      // Send data to LCD data port
+    LCD_EN = 1;             // EN High
+    lcd_delay(10);
+    LCD_EN = 0;             // EN Low; data sampled at EN falling edge
+    lcd_delay(10);
+}
+
+void InitLCD(void)
+{
+    ADCON1 = 0x0F;
+    TRISB = 0x00;           // Set data port as output
+    TRISAbits.RA0 = 0;      // RS pin
+    TRISAbits.RA1 = 0;      // EN pin
+
+    SendInstruction(0x38);  // 8 bit mode, 2 line, 5x7 dots
+    SendInstruction(0x06);  // Entry mode
+    SendInstruction(0x0C);  // Display ON cursor OFF
+    SendInstruction(0x01);  // Clear display
+    SendInstruction(0x80);  // Set address to 0
+}
+
+void LCD_display(unsigned int row, unsigned int pos, unsigned char *ch)
+{
+    if(row == 1)
+        SendInstruction(0x80 | (pos - 1));
+    else
+        SendInstruction(0xC0 | (pos - 1));
+   
+    while(*ch)
+        SendData(*ch++);
+}
+
+void ADCInit(void)
+{
+    TRISEbits.RE1 = 1;              // ADC channel 6 input
+    TRISEbits.RE2 = 1;              // ADC channel 7 input
+
+    ADCON1 = 0b00000111;            // Ref voltages Vdd & Vss; AN0 - AN7 channels Analog
+    ADCON2 = 0b10101110;            // Right justified; Acquisition time 4T; Conversion clock Fosc/64
+}
+
+unsigned short Read_ADC(unsigned char Ch)
+{
+    ADCON0 = 0b00000001 | (Ch << 2);   // ADC on; Select channel;
+    GODONE = 1;                         // Start Conversion
+
+    while(GO_DONE == 1);                // Wait till A/D conversion is complete
+    return ADRES;                       // Return ADC result
+}
+
+int main(void)
+{
+    unsigned int temp;
+    InitLCD();
+    ADCInit();
+    LCD_display(1, 1, "Temperature:");
+    while(1)
+    {
+        temp = Read_ADC(7);
+        temp = ((temp * 500) / 1023);
+        sprintf(str, "%d'C  ", temp);
+        LCD_display(2, 1, str);
+        lcd_delay(5000);
+    }
+    return 0;
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Seven Segment
+
+#include <pic18f4550.h>
+
+#define ONE     0b0000110
+#define TWO     0b1011011
+#define THREE   0b1001111
+#define FOUR    0b1100110
+#define FIVE    0b1101101
+#define SIX     0b1111101
+#define SEVEN   0b0000111
+#define EIGHT   0b1111111
+#define NINE    0b1101111
+#define ZERO    0b0111111
+#define SEG1    LATAbits.LATA0 // Define segment 1 pin
+#define SEG2    LATAbits.LATA1 // Define segment 2 pin
+
+const unsigned char segData[10] = {ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE}; // Define segment data for numbers 0-9
+
+void delay(unsigned int time)
+{
+    int i;
+    while(time--)
+        for(i = 0; i < 500; i++); // Delay function
+}
+
+int main(void)
+{
+    unsigned char count = 0; // Variable to count from 0 to 99
+    unsigned char digit1, digit2; // Variables to store the digits of the count
+    unsigned int i;
+    TRISB = 0x00; // Set PORTB as output
+    LATA =  0x00; // Initialize PORTA
+    TRISAbits.TRISA0 = 0; // Set pin RA0 as output (SEG1)
+    TRISAbits.TRISA1 = 0; // Set pin RA1 as output (SEG2)
+    while(1)
+    {
+        for(count = 0; count < 100; count++) // Loop from 0 to 99
+        {
+            digit1 = count / 10; // Extract tens digit
+            digit2 = count % 10; // Extract ones digit
+            for(i = 0; i < 100; i++) // Loop to display each digit
+            {
+                SEG1 = 1; // Enable segment 1
+                SEG2 = 0; // Disable segment 2
+                LATB = ~segData[digit1]; // Display tens digit
+                delay(2); // Delay
+                SEG1 = 0; // Disable segment 1
+                SEG2 = 1; // Enable segment 2
+                LATB = ~segData[digit2]; // Display ones digit
+                delay(2); // Delay
+            }
+        }
+    }
+    return 0;
+}
