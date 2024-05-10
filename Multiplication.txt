@@ -1,0 +1,14 @@
+# include <PIC18F4550.h> 
+void main (void) 
+{ 
+unsigned int num1 , num2 ,sum ; 
+TRISB =0 ; 
+//LATB =1 ; 
+num1 = 0x04; 
+num2 = 0x05; 
+sum  = num1 * num2 ; 
+PORTB = sum ; 
+PORTC = num1 ; 
+PORTD = num2 ; 
+return ; 
+}
