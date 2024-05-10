@@ -1,0 +1,19 @@
+#include <pic18f4550.h> 
+
+void main(void) 
+{ 
+    int i, n=10, sum=0; 
+    TRISB=0; 
+    int number[]={1,2,3,4,5,6,7,8,9,10}; 
+    
+    for(i=0; i<n; i++) 
+    { 
+        sum = sum + number[i]; // or sum += number[i];
+    } 
+    
+    PORTB = sum; 
+    
+    return; 
+}
+
+ 
